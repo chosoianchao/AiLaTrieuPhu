@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTin"
+        tools:ignore="UselessParent">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:layout_marginTop="27dp"
+            android:background="@color/colorHelp"
+            android:backgroundTint="@color/colorTin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:background="@drawable/ic_help_title"
+            android:gravity="center"
+            android:text="Ý kiến khán giả"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TableRow
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="75dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/chart_A"
+                android:layout_width="20dp"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="95dp"
+                android:background="@color/yellow" />
+
+            <View
+                android:id="@+id/chart_B"
+                android:layout_width="20dp"
+                android:layout_height="140dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="30dp"
+                android:background="@color/yellow" />
+
+            <View
+                android:id="@+id/chart_C"
+                android:layout_width="20dp"
+                android:layout_height="80dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="30dp"
+
+                android:background="@color/yellow" />
+
+            <View
+                android:id="@+id/chart_D"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="30dp"
+                android:background="@color/yellow" />
+
+        </TableRow>
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="75dp"
+            android:background="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="98dp"
+            android:layout_marginBottom="45dp"
+            android:text="A"
+            android:textColor="@color/yellow"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="150dp"
+            android:layout_marginBottom="45dp"
+            android:text="B"
+            android:textColor="@color/yellow"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="200dp"
+            android:layout_marginBottom="45dp"
+            android:text="C"
+            android:textColor="@color/yellow"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="250dp"
+            android:layout_marginBottom="45dp"
+            android:text="D"
+            android:textColor="@color/yellow"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+    </FrameLayout>
+
+</LinearLayout>
