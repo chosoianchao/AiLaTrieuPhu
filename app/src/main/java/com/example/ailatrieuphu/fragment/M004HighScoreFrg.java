@@ -63,12 +63,9 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
                 dialog.setMessage("Bạn có muốn xóa dữ liệu: \n" + delItem.name + " " + delItem.score + " " + "?");
 
                 dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes", (dialogInterface, i) -> {
-                    HandlerManager.getINSTANCE().postNewRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            QuestionDAO dao = App.getInstance().getDb().getDAO();
-                            dao.delete(delItem);
-                        }
+                    HandlerManager.getINSTANCE().postNewRunnable(() -> {
+                        QuestionDAO dao = App.getInstance().getDb().getDAO();
+                        dao.delete(delItem);
                     });
                     App.getInstance().getStorage().highScore.getValue().remove(position);
                     adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
