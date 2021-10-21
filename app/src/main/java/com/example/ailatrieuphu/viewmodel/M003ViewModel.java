@@ -1,12 +1,7 @@
 package com.example.ailatrieuphu.viewmodel;
 
-import android.os.Handler;
-import android.os.Message;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.ailatrieuphu.App;
+import com.example.ailatrieuphu.HandlerManager;
 import com.example.ailatrieuphu.databases.dao.QuestionDAO;
 import com.example.ailatrieuphu.databases.entities.HighScore;
 
@@ -17,21 +12,21 @@ public class M003ViewModel extends MainViewModel {
     public void addCoin(ArrayList<String> coin) {
         coin.add("0");
         coin.add("0");
-        coin.add("200000");
-        coin.add("400000");
-        coin.add("600000");
-        coin.add("1000000");
-        coin.add("20000000");
-        coin.add("30000000");
-        coin.add("60000000");
-        coin.add("1000000000");
-        coin.add("140000000");
-        coin.add("220000000");
-        coin.add("300000000");
-        coin.add("400000000");
-        coin.add("600000000");
-        coin.add("850000000");
-        coin.add("1500000000");
+        coin.add("200.000");
+        coin.add("400.000");
+        coin.add("600.000");
+        coin.add("1.000.000");
+        coin.add("2.000.000");
+        coin.add("3.000.000");
+        coin.add("6.000.000");
+        coin.add("10.000.000");
+        coin.add("14.000.000");
+        coin.add("22.000.000");
+        coin.add("30.000.000");
+        coin.add("40.000.000");
+        coin.add("60.000.000");
+        coin.add("85.000.000");
+        coin.add("150.000.000");
     }
 
     public void insertHighScore(Object data, Object tag) {
@@ -41,13 +36,10 @@ public class M003ViewModel extends MainViewModel {
             score = "0";
         }
         HighScore highScore = new HighScore(name, score);
-        new Thread() {
-            @Override
-            public void run() {
-                QuestionDAO dao = App.getInstance().getDb().getDAO();
-                dao.insertAll(highScore);
-            }
-        }.start();
+        HandlerManager.getINSTANCE().postNewRunnable(() -> {
+            QuestionDAO dao = App.getInstance().getDb().getDAO();
+            dao.insertAll(highScore);
+        });
     }
 }
 
