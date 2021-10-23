@@ -7,8 +7,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.example.ailatrieuphu.CommonUtils;
 import com.example.ailatrieuphu.MediaManager;
-import com.example.ailatrieuphu.OnActionCallBack;
 import com.example.ailatrieuphu.R;
 
 
@@ -39,6 +39,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             ivMusic.setImageLevel(ivMusic.getDrawable().getLevel() == 0 ? 1 : 0);
             if (ivMusic.getDrawable().getLevel() == 0) {
                 MediaManager.getInstance().playSong();
+                CommonUtils.getInstance().savePref(null, KEY_MUSIC_ON);
             } else {
                 MediaManager.getInstance().pauseSong();
             }

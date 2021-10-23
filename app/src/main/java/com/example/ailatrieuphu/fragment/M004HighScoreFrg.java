@@ -70,20 +70,18 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
                     App.getInstance().getStorage().highScore.getValue().remove(position);
                     adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 });
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "No", (dialogInterface, i) -> {
-                    adapter.notifyItemChanged(position);
-                });
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "No", (dialogInterface, i) -> adapter.notifyItemChanged(position));
                 dialog.show();
             }
         }).attachToRecyclerView(mBinding.rvListHighScore);
     }
 
     private void showListHighScore() {
-        new Thread(() -> {
+        HandlerManager.getINSTANCE().postNewRunnable(() -> {
             List<HighScore> listData = App.getInstance().getDb().getDAO().getAll();
             MainActivity act = (MainActivity) mContext;
             act.runOnUiThread(() -> App.getInstance().getStorage().highScore.setValue(listData));
-        }).start();
+        });
     }
 
 

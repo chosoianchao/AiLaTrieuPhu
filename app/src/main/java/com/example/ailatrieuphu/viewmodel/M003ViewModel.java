@@ -4,6 +4,7 @@ import com.example.ailatrieuphu.App;
 import com.example.ailatrieuphu.HandlerManager;
 import com.example.ailatrieuphu.databases.dao.QuestionDAO;
 import com.example.ailatrieuphu.databases.entities.HighScore;
+import com.example.ailatrieuphu.databases.entities.Question;
 
 import java.util.ArrayList;
 
@@ -29,16 +30,20 @@ public class M003ViewModel extends MainViewModel {
         coin.add("150.000.000");
     }
 
-    public void insertHighScore(Object data, Object tag) {
+    public void insertHighScore(Question question, Object data, Object tag) {
         String name = (String) data;
         String score = (String) tag;
         if (score == null) {
             score = "0";
         }
         HighScore highScore = new HighScore(name, score);
+        if (question.level == 15) {
+            highScore = new HighScore(name, "150.000.000");
+        }
+        HighScore finalHighScore = highScore;
         HandlerManager.getINSTANCE().postNewRunnable(() -> {
             QuestionDAO dao = App.getInstance().getDb().getDAO();
-            dao.insertAll(highScore);
+            dao.insertAll(finalHighScore);
         });
     }
 }

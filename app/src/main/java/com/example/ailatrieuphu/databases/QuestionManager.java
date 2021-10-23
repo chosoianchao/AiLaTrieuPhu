@@ -1,6 +1,7 @@
 package com.example.ailatrieuphu.databases;
 
 import com.example.ailatrieuphu.App;
+import com.example.ailatrieuphu.HandlerManager;
 import com.example.ailatrieuphu.databases.entities.Question;
 
 public class QuestionManager {
@@ -18,13 +19,10 @@ public class QuestionManager {
     }
 
     public void getQuestion(int level, OnResultCallBack callBack) {
-        new Thread() {
-            @Override
-            public void run() {
-                Question question = App.getInstance().getDb().getDAO().getQuestion(level);
-                callBack.callBack(question);
-            }
-        }.start();
+        HandlerManager.getINSTANCE().postNewRunnable(() -> {
+            Question question = App.getInstance().getDb().getDAO().getQuestion(level);
+            callBack.callBack(question);
+        });
     }
 
     public interface OnResultCallBack {

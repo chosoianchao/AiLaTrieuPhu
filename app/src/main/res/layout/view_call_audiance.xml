@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="360dp"
         android:background="@color/colorTin"
         tools:ignore="UselessParent">
 
@@ -121,6 +121,17 @@
             android:text="D"
             android:textColor="@color/yellow"
             android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/bt_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|center"
+            android:backgroundTint="@color/yellow"
+            android:text="Đóng"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             tools:ignore="HardcodedText" />
     </FrameLayout>
 

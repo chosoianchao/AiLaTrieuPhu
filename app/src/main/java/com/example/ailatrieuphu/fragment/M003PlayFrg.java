@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -35,9 +34,13 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     public static final String TAG = M003PlayFrg.class.getName();
     private static final String KEY_TASK_COUNTING = "KEY_TASK_COUNTING";
     private static final String KEY_TASK_5050 = "KEY_TASK_5050";
+    private static final String KEY_TASK_AUDIENCE = "KEY_TASK_AUDIENCE";
+    private static final String KEY_TASK_STOP = "KEY_TASK_STOP";
+    private static final String KEY_TASK_CHANGE = "KEY_TASK_CHANGE";
+    private static final String KEY_TASK_CALL = "KEY_TASK_CALL";
     private final Handler handler = new Handler();
     private final ArrayList<String> coin = new ArrayList<>();
-    private MTask task;
+    private MTask task, task5050, taskCall, taskStop, taskChange, taskAudience;
     private Question question;
 
     @Override
@@ -62,7 +65,6 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         });
         mBinding.include.tvCoin.setText("0");
         startAsyncTask();
-
         question1();
 
     }
@@ -132,12 +134,10 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         int index = question.level;
         getQuestion(++index);
         getSoundQuestion(index);
-        if (question.level == 15) {
-            winGame();
-            return;
-        }
+
         mBinding.include.tvCoin.setText(coin.get(index));
         Log.i(TAG, "nextQuestion: " + (index));
+
         mBinding.include.tvCoin.setTag(coin.get(index));
     }
 
@@ -191,11 +191,11 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         MediaManager.getInstance().playGame(R.raw.song_best_player, mediaPlayer -> {
             HighScoreDialog dialog = new HighScoreDialog(mContext, (data, key) -> {
                 if (key.equals(HighScoreDialog.KEY_YES_GAME)) {
-                    mViewModel.insertHighScore(data, mBinding.include.tvCoin.getTag());
+                    mViewModel.insertHighScore(question, data, mBinding.include.tvCoin.getTag());
                     MainActivity act = (MainActivity) mContext;
                     act.showFrg(M001MainFrg.TAG);
                 }
-            }, mBinding.include.tvCoin.getTag());
+            }, mBinding.include.tvCoin.getTag(), question);
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
@@ -203,17 +203,23 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     }
 
     private void selectQuestionA() {
-        stopAsyncTask();
+        stopAsync();
         MediaManager.getInstance().playGame(R.raw.song_ans_a, mediaPlayer -> {
             if (M003PlayFrg.this.checkQuestionA(question)) {
                 mBinding.ivCaseA.setImageLevel(2);
                 MediaManager.getInstance().playGame(R.raw.song_true_a, mediaPlayer1 -> {
                 });
-                handler.postDelayed(() -> M003PlayFrg.this.nextQuestion(question), 3000);
+                handler.postDelayed(() -> {
+                    if (question.level == 15) {
+                        mBinding.include.tvCoin.setText(coin.get(16));
+                        winGame();
+                        return;
+                    }
+                    M003PlayFrg.this.nextQuestion(question);
+                }, 3000);
             } else {
                 checkAnswer();
                 mBinding.ivCaseA.setImageLevel(3);
-                M003PlayFrg.this.stopAsyncTask();
                 handler.postDelayed(M003PlayFrg.this::gameOver, 3000);
             }
         });
@@ -223,18 +229,25 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         mBinding.ivCaseD.setClickable(false);
     }
 
+    @SuppressLint("SetTextI18n")
     private void selectQuestionB() {
-        stopAsyncTask();
+        stopAsync();
         MediaManager.getInstance().playGame(R.raw.song_ans_b, mediaPlayer -> {
             if (M003PlayFrg.this.checkQuestionB(question)) {
                 mBinding.ivCaseB.setImageLevel(2);
                 MediaManager.getInstance().playGame(R.raw.song_true_b, mediaPlayer1 -> {
                 });
-                handler.postDelayed(() -> nextQuestion(question), 3000);
+                handler.postDelayed(() -> {
+                    if (question.level == 15) {
+                        mBinding.include.tvCoin.setText(coin.get(16));
+                        winGame();
+                        return;
+                    }
+                    nextQuestion(question);
+                }, 3000);
             } else {
                 checkAnswer();
                 mBinding.ivCaseB.setImageLevel(3);
-                stopAsyncTask();
                 handler.postDelayed(this::gameOver, 3000);
             }
         });
@@ -245,17 +258,23 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     }
 
     private void selectQuestionC() {
-        stopAsyncTask();
+        stopAsync();
         MediaManager.getInstance().playGame(R.raw.song_ans_c, mediaPlayer -> {
             if (M003PlayFrg.this.checkQuestionC(question)) {
                 mBinding.ivCaseC.setImageLevel(2);
                 MediaManager.getInstance().playGame(R.raw.song_true_c, mediaPlayer1 -> {
                 });
-                handler.postDelayed(() -> M003PlayFrg.this.nextQuestion(question), 3000);
+                handler.postDelayed(() -> {
+                    if (question.level == 15) {
+                        mBinding.include.tvCoin.setText(coin.get(16));
+                        winGame();
+                        return;
+                    }
+                    M003PlayFrg.this.nextQuestion(question);
+                }, 3000);
             } else {
                 checkAnswer();
                 mBinding.ivCaseC.setImageLevel(3);
-                stopAsyncTask();
                 handler.postDelayed(M003PlayFrg.this::gameOver, 3000);
             }
         });
@@ -266,17 +285,23 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     }
 
     private void selectQuestionD() {
-        stopAsyncTask();
+        stopAsync();
         MediaManager.getInstance().playGame(R.raw.song_ans_d, mediaPlayer -> {
             if (M003PlayFrg.this.checkQuestionD(question)) {
                 mBinding.ivCaseD.setImageLevel(2);
                 MediaManager.getInstance().playGame(R.raw.song_true_d, mediaPlayer1 -> {
                 });
-                handler.postDelayed(() -> nextQuestion(question), 3000);
+                handler.postDelayed(() -> {
+                    if (question.level == 15) {
+                        mBinding.include.tvCoin.setText(coin.get(16));
+                        winGame();
+                        return;
+                    }
+                    nextQuestion(question);
+                }, 3000);
             } else {
                 checkAnswer();
                 mBinding.ivCaseD.setImageLevel(3);
-                stopAsyncTask();
                 handler.postDelayed(this::gameOver, 3000);
             }
         });
@@ -289,16 +314,23 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     private void gameOver() {
         GameOverDialog dialog = new GameOverDialog(mContext);
         dialog.show();
+        final Runnable runnable = () -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        };
+        dialog.setOnDismissListener(dialogInterface -> handler.removeCallbacks(runnable));
+        handler.postDelayed(runnable, 3000);
         MediaManager.getInstance().playGame(R.raw.song_out_of_time, mediaPlayer -> {
             HighScoreDialog dialog1 = new HighScoreDialog(mContext, (data, key) -> {
                 if (key.equals(HighScoreDialog.KEY_YES_GAME)) {
-                    mViewModel.insertHighScore(data, mBinding.include.tvCoin.getTag());
+                    mViewModel.insertHighScore(question, data, mBinding.include.tvCoin.getTag());
                     MediaManager.getInstance().playGame(R.raw.lose, mediaPlayer1 -> {
                         MainActivity act = (MainActivity) mContext;
                         act.showFrg(M001MainFrg.TAG);
                     });
                 }
-            }, mBinding.include.tvCoin.getTag());
+            }, mBinding.include.tvCoin.getTag(), question);
             dialog1.setCancelable(false);
             dialog1.setCanceledOnTouchOutside(false);
             dialog1.show();
@@ -360,36 +392,44 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     @Override
     protected void clickView(View view) {
         if (view.getId() == R.id.iv_stop_game) {
-            stopAsyncTask();
+            stopAsync();
             StopGameDialog dialog = new StopGameDialog(mContext, (data, key) -> {
                 if (key.equals(StopGameDialog.KEY_YES_GAME)) {
                     MediaManager.getInstance().playGame(R.raw.lose, mediaPlayer -> {
+                        startStop();
                         MainActivity act = (MainActivity) mContext;
                         act.showFrg(M001MainFrg.TAG);
                     });
+                } else if (key.equals(StopGameDialog.KEY_BACK_GAME)) {
+                    startStop();
                 }
             });
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         } else if (view.getId() == R.id.iv_change_question) {
-            stopAsyncTask();
+            stopAsync();
             ChangeQuestionDialog dialog = new ChangeQuestionDialog(mContext, (data, key) -> {
                 if (key.equals(ChangeQuestionDialog.KEY_YES_CHANGE)) {
+                    startChange();
                     doYesChange();
+                } else if (key.equals(ChangeQuestionDialog.KEY_BACK_CHANGE)) {
+                    startChange();
                 }
             });
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         } else if (view.getId() == R.id.iv_50_50) {
-            stopAsyncTask();
+            stopAsync();
             Help5050Dialog dialog = new Help5050Dialog(mContext, (data, key) -> {
                 if (key.equals(Help5050Dialog.KEY_YES_5050)) {
                     MediaManager.getInstance().playGame(R.raw.song_50_50, mediaPlayer -> {
                         start5050();
                         M003PlayFrg.this.doYes5050();
                     });
+                } else if (key.equals(Help5050Dialog.KEY_BACK_5050)) {
+                    start5050();
                 }
             });
             dialog.setCancelable(false);
@@ -397,15 +437,21 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
             dialog.show();
 
         } else if (view.getId() == R.id.iv_help_audiance) {
-            stopAsyncTask();
+            stopAsync();
             MediaManager.getInstance().playGame(R.raw.song_help_audiance, mediaPlayer -> {
-                HelpAudienceDialog dialog = new HelpAudienceDialog(mContext, question);
+                HelpAudienceDialog dialog = new HelpAudienceDialog(mContext, (data, key) -> {
+                    if (key.equals(HelpAudienceDialog.KEY_BUTTON_CANCEL)) {
+                        startAudience();
+                    }
+                }, question);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
                 mBinding.ivHelpAudiance.setImageLevel(1);
                 mBinding.ivHelpAudiance.setClickable(false);
             });
         } else if (view.getId() == R.id.iv_call) {
-            stopAsyncTask();
+            stopAsync();
             MediaManager.getInstance().playGame(R.raw.song_help_call, mediaPlayer -> {
                 CallDialog1 dialog1 = new CallDialog1(mContext, (data, key) -> {
                     switch (key) {
@@ -418,7 +464,11 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
                             break;
                     }
                 }, (id, path, name) -> {
-                    CallDialog2 mDialog2 = new CallDialog2(mContext, id, path, name, question);
+                    CallDialog2 mDialog2 = new CallDialog2(mContext, id, path, name, question, (data, key) -> {
+                        if (key.equals(CallDialog2.KEY_BUTTON_BACK)) {
+                            startCall();
+                        }
+                    });
                     mDialog2.setCancelable(false);
                     mDialog2.setCanceledOnTouchOutside(false);
                     mDialog2.show();
@@ -429,6 +479,15 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         } else if (view.getId() == R.id.iv_info) {
             openDrawer();
         }
+    }
+
+    private void stopAsync() {
+        stopAsyncTask();
+        stop5050AsyncTask();
+        stopCallAsyncTask();
+        stopChangeAsyncTask();
+        stopStopAsyncTask();
+        stopCallAudienceAsyncTask();
     }
 
     private void openDrawer() {
@@ -488,7 +547,6 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
     @SuppressLint("SetTextI18n")
     @Override
     public void startExecute() {
-        mBinding.include.tvTime.setText("30");
     }
 
     private void startAsyncTask() {
@@ -496,15 +554,39 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
         task.execute(30);
     }
 
-    private void
-    start5050() {
-        task = new MTask(KEY_TASK_5050, this);
-        task.execute(mBinding.include.tvTime.getText());
+    private void start5050() {
+        task5050 = new MTask(KEY_TASK_5050, this);
+        task5050.execute(Integer.parseInt(mBinding.include.tvTime.getText().toString()));
+    }
+
+    private void startStop() {
+        taskStop = new MTask(KEY_TASK_STOP, this);
+        taskStop.execute(Integer.parseInt(mBinding.include.tvTime.getText().toString()));
+    }
+
+    private void startChange() {
+        taskChange = new MTask(KEY_TASK_CHANGE, this);
+        taskChange.execute(Integer.parseInt(mBinding.include.tvTime.getText().toString()));
+    }
+
+    private void startCall() {
+        task5050 = new MTask(KEY_TASK_CALL, this);
+        task5050.execute(Integer.parseInt(mBinding.include.tvTime.getText().toString()));
+    }
+
+    private void startAudience() {
+        taskAudience = new MTask(KEY_TASK_AUDIENCE, this);
+        taskAudience.execute(Integer.parseInt(mBinding.include.tvTime.getText().toString()));
     }
 
     @Override
     public Object executeStart(Object dataInput, String key, MTask task) {
         if (key.equals(KEY_TASK_COUNTING)) return doCounting(dataInput, task);
+        if (key.equals(KEY_TASK_5050)) return doCounting(dataInput, task);
+        if (key.equals(KEY_TASK_STOP)) return doCounting(dataInput, task);
+        if (key.equals(KEY_TASK_CALL)) return doCounting(dataInput, task);
+        if (key.equals(KEY_TASK_CHANGE)) return doCounting(dataInput, task);
+        if (key.equals(KEY_TASK_AUDIENCE)) return doCounting(dataInput, task);
         return dataInput;
     }
 
@@ -523,9 +605,46 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
 
     @Override
     public void updateUI(Object dataUpdate, String key) {
-        if (key.equals(KEY_TASK_COUNTING)) {
-            updateCounting((int) dataUpdate);
+        switch (key) {
+            case KEY_TASK_COUNTING:
+                updateCounting((int) dataUpdate);
+                break;
+            case KEY_TASK_5050:
+                updateCounting5050((int) dataUpdate);
+                break;
+            case KEY_TASK_STOP:
+                updateCountingStop((int) dataUpdate);
+                break;
+            case KEY_TASK_CHANGE:
+                updateCountingChange((int) dataUpdate);
+                break;
+            case KEY_TASK_CALL:
+                updateCountingCall((int) dataUpdate);
+                break;
+            case KEY_TASK_AUDIENCE:
+                updateCountingAudience((int) dataUpdate);
+                break;
         }
+    }
+
+    private void updateCountingChange(int count) {
+        mBinding.include.tvTime.setText(String.format("%s", count));
+    }
+
+    private void updateCountingStop(int count) {
+        mBinding.include.tvTime.setText(String.format("%s", count));
+    }
+
+    private void updateCountingCall(int count) {
+        mBinding.include.tvTime.setText(String.format("%s", count));
+    }
+
+    private void updateCountingAudience(int count) {
+        mBinding.include.tvTime.setText(String.format("%s", count));
+    }
+
+    private void updateCounting5050(int count) {
+        mBinding.include.tvTime.setText(String.format("%s", count));
     }
 
     private void stopAsyncTask() {
@@ -535,15 +654,52 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
 
     }
 
+    private void stopStopAsyncTask() {
+        if (taskStop == null) return;
+        taskStop.cancel(true);
+        taskStop = null;
+    }
+
+    private void stopChangeAsyncTask() {
+        if (taskChange == null) return;
+        taskChange.cancel(true);
+        taskChange = null;
+    }
+
+    private void stop5050AsyncTask() {
+        if (task5050 == null) return;
+        task5050.cancel(true);
+        task5050 = null;
+    }
+
+    private void stopCallAsyncTask() {
+        if (taskCall == null) return;
+        taskCall.cancel(true);
+        taskCall = null;
+    }
+
+    private void stopCallAudienceAsyncTask() {
+        if (taskAudience == null) return;
+        taskAudience.cancel(true);
+        taskAudience = null;
+    }
+
+
     private void updateCounting(int count) {
         mBinding.include.tvTime.setText(String.format("%s", count));
     }
 
     @Override
     public void completeTask(Object result, String key) {
-        if (key.equals(KEY_TASK_COUNTING)) {
-            Toast.makeText(mContext, (boolean) result ? "Success" : "Failed", Toast.LENGTH_SHORT).show();
-            gameOver();
+        switch (key) {
+            case KEY_TASK_COUNTING:
+            case KEY_TASK_5050:
+            case KEY_TASK_CALL:
+            case KEY_TASK_CHANGE:
+            case KEY_TASK_STOP:
+            case KEY_TASK_AUDIENCE:
+                gameOver();
+                break;
         }
     }
 }
