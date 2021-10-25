@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="@color/teal_700"
+    android:layout_height="100dp"
     android:orientation="vertical">
 
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:layout_marginTop="15dp"
         tools:ignore="UselessParent">
 
         <ImageView
@@ -23,8 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:text="Nhạc nền"
-            android:textSize="20sp"
+            android:text="Âm thanh"
+            android:textSize="22sp"
+            android:textColor="@color/white"
             tools:ignore="HardcodedText" />
 
         <ImageView
@@ -36,34 +39,5 @@
             tools:ignore="ContentDescription" />
     </TableRow>
 
-    <TableRow
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        tools:ignore="UselessParent">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_sound"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:text="Âm thanh"
-            android:textSize="20sp"
-            tools:ignore="HardcodedText" />
-
-        <ImageView
-            android:id="@+id/iv_on_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:src="@drawable/bg_setting"
-            tools:ignore="ContentDescription" />
-    </TableRow>
 </LinearLayout>

@@ -14,18 +14,13 @@ public final class CommonUtils {
         return instance;
     }
 
-    public void savePref(String key, String value) {
+    public void savePref(String key, boolean value) {
         SharedPreferences pref = App.getInstance().getSharedPreferences(FILE_SAVE, Context.MODE_PRIVATE);
-        pref.edit().putString(key, value).apply();
+        pref.edit().putBoolean(key, value).apply();
     }
 
-    public String getPref(String key) {
+    public Boolean getPref(String key) {
         SharedPreferences pref = App.getInstance().getSharedPreferences(FILE_SAVE, Context.MODE_PRIVATE);
-        return pref.getString(key, null);
-    }
-
-    public void clearPref(String key) {
-        SharedPreferences pref = App.getInstance().getSharedPreferences(FILE_SAVE, Context.MODE_PRIVATE);
-        pref.edit().remove(key).apply();
+        return pref.getBoolean(key, true);
     }
 }

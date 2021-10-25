@@ -1,7 +1,9 @@
 package com.example.ailatrieuphu.fragment;
 
+import android.util.Log;
 import android.view.View;
 
+import com.example.ailatrieuphu.CommonUtils;
 import com.example.ailatrieuphu.MediaManager;
 import com.example.ailatrieuphu.R;
 import com.example.ailatrieuphu.activity.MainActivity;
@@ -40,6 +42,16 @@ public class M001MainFrg extends BaseFragment<FrgM001MainBinding, M001ViewModel>
         } else if (view.getId() == R.id.iv_setting) {
             SettingDialog dialog = new SettingDialog(mContext);
             dialog.show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        boolean stateOfMusic = CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC);
+        if(!stateOfMusic ){
+            MediaManager.getInstance().pauseSong();
         }
     }
 

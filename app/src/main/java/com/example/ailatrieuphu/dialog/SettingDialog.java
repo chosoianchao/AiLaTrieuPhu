@@ -13,8 +13,9 @@ import com.example.ailatrieuphu.R;
 
 
 public class SettingDialog extends Dialog implements View.OnClickListener {
-    public static final String KEY_MUSIC_ON = "KEY_MUSIC_ON";
-    ImageView ivMusic, ivSound;
+    public static final String STATE_OF_MUSIC = "state_of_music";
+    public static final String STATE_OF_SOUND = "sate_of_sound";
+    ImageView ivMusic;
 
     public SettingDialog(@NonNull Context context) {
         super(context);
@@ -26,10 +27,13 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private void initViews() {
         ivMusic = findViewById(R.id.iv_on_music);
         ivMusic.setOnClickListener(this);
+        boolean stateOfMusic = CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC);
 
-
-        ivSound = findViewById(R.id.iv_on_sound);
-        findViewById(R.id.iv_on_sound).setOnClickListener(this);
+        if(stateOfMusic){
+            ivMusic.setImageLevel(0);
+        }else{
+            ivMusic.setImageLevel(1);
+        }
     }
 
 
@@ -39,16 +43,10 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             ivMusic.setImageLevel(ivMusic.getDrawable().getLevel() == 0 ? 1 : 0);
             if (ivMusic.getDrawable().getLevel() == 0) {
                 MediaManager.getInstance().playSong();
-                CommonUtils.getInstance().savePref(null, KEY_MUSIC_ON);
+                CommonUtils.getInstance().savePref(STATE_OF_MUSIC, true);
             } else {
                 MediaManager.getInstance().pauseSong();
-            }
-        } else if (view.getId() == R.id.iv_on_sound) {
-            ivSound.setImageLevel(ivSound.getDrawable().getLevel() == 0 ? 1 : 0);
-            if (ivSound.getDrawable().getLevel() == 0) {
-                MediaManager.getInstance().playSong();
-            } else {
-                MediaManager.getInstance().pauseSong();
+                CommonUtils.getInstance().savePref(STATE_OF_MUSIC, false);
             }
         }
     }

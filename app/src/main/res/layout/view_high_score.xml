@@ -40,6 +40,7 @@
         android:backgroundTint="@color/red"
         android:hint="Your name"
         android:singleLine="true"
+        android:gravity="center"
         tools:ignore="Autofill,HardcodedText,TextFields" />
 
     <TableRow

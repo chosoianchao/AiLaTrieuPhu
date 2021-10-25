@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.ailatrieuphu.CommonUtils;
 import com.example.ailatrieuphu.MTask;
 import com.example.ailatrieuphu.MediaManager;
 import com.example.ailatrieuphu.R;
@@ -24,6 +25,7 @@ import com.example.ailatrieuphu.dialog.GameOverDialog;
 import com.example.ailatrieuphu.dialog.Help5050Dialog;
 import com.example.ailatrieuphu.dialog.HelpAudienceDialog;
 import com.example.ailatrieuphu.dialog.HighScoreDialog;
+import com.example.ailatrieuphu.dialog.SettingDialog;
 import com.example.ailatrieuphu.dialog.StopGameDialog;
 import com.example.ailatrieuphu.viewmodel.M003ViewModel;
 
@@ -64,9 +66,17 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
             }
         });
         mBinding.include.tvCoin.setText("0");
+        stateMusic();
         startAsyncTask();
         question1();
+    }
 
+    private void stateMusic() {
+        if (CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC)) {
+            MediaManager.getInstance().playSong();
+        } else {
+            MediaManager.getInstance().pauseSong();
+        }
     }
 
     private void question1() {
@@ -395,11 +405,7 @@ public class M003PlayFrg extends BaseFragment<FrgM003PlayBinding, M003ViewModel>
             stopAsync();
             StopGameDialog dialog = new StopGameDialog(mContext, (data, key) -> {
                 if (key.equals(StopGameDialog.KEY_YES_GAME)) {
-                    MediaManager.getInstance().playGame(R.raw.lose, mediaPlayer -> {
-                        startStop();
-                        MainActivity act = (MainActivity) mContext;
-                        act.showFrg(M001MainFrg.TAG);
-                    });
+                    MediaManager.getInstance().playGame(R.raw.lose, mediaPlayer -> gameOver());
                 } else if (key.equals(StopGameDialog.KEY_BACK_GAME)) {
                     startStop();
                 }

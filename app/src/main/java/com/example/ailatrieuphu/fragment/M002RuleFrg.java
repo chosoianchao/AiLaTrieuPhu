@@ -5,12 +5,14 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
+import com.example.ailatrieuphu.CommonUtils;
 import com.example.ailatrieuphu.MediaManager;
 import com.example.ailatrieuphu.R;
 import com.example.ailatrieuphu.activity.MainActivity;
 import com.example.ailatrieuphu.base.BaseFragment;
 import com.example.ailatrieuphu.databinding.FrgM002RuleBinding;
 import com.example.ailatrieuphu.dialog.InfoReadyDialog;
+import com.example.ailatrieuphu.dialog.SettingDialog;
 import com.example.ailatrieuphu.viewmodel.M002ViewModel;
 
 
@@ -20,15 +22,24 @@ public class M002RuleFrg extends BaseFragment<FrgM002RuleBinding, M002ViewModel>
     @Override
     protected void initViews() {
 
-        MediaManager.getInstance().playGame(R.raw.song_rule, mediaPlayer -> MediaManager.getInstance().playGame(R.raw.song_ready, mediaPlayer1 -> {
-            M002RuleFrg.this.showReadyDialog();
-        }));
+        MediaManager.getInstance().playGame(R.raw.song_rule, mediaPlayer -> MediaManager.getInstance().playGame(R.raw.song_ready, mediaPlayer1 -> M002RuleFrg.this.showReadyDialog()));
         mBinding.milestone.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_left));
 
+        stateMusic();
+    }
+
+    private void stateMusic() {
+        if (CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC)) {
+            MediaManager.getInstance().playSong();
+        } else {
+            MediaManager.getInstance().pauseSong();
+            new Handler().postDelayed(this::showReadyDialog, 3000);
+        }
     }
 
 
     private void showReadyDialog() {
+
         InfoReadyDialog inform = new InfoReadyDialog(mContext, (data, key) -> {
             if (key.equals(InfoReadyDialog.KEY_BACK)) {
                 doBack();
@@ -42,10 +53,15 @@ public class M002RuleFrg extends BaseFragment<FrgM002RuleBinding, M002ViewModel>
     }
 
     private void doReady() {
-        MediaManager.getInstance().playGame(R.raw.song_gofind, mediaPlayer -> {
+        if (!CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC)) {
             MainActivity act = (MainActivity) mContext;
             act.showFrg(M003PlayFrg.TAG);
-        });
+        }else {
+            MediaManager.getInstance().playGame(R.raw.song_gofind, mediaPlayer -> {
+                MainActivity act = (MainActivity) mContext;
+                act.showFrg(M003PlayFrg.TAG);
+            });
+        }
     }
 
     private void doBack() {
@@ -55,7 +71,6 @@ public class M002RuleFrg extends BaseFragment<FrgM002RuleBinding, M002ViewModel>
 
     @Override
     protected void clickView(View view) {
-
     }
 
     @Override

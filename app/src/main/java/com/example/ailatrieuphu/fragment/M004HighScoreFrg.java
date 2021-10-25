@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ailatrieuphu.App;
+import com.example.ailatrieuphu.CommonUtils;
 import com.example.ailatrieuphu.HandlerManager;
 import com.example.ailatrieuphu.R;
 import com.example.ailatrieuphu.activity.MainActivity;
@@ -16,6 +17,7 @@ import com.example.ailatrieuphu.base.BaseFragment;
 import com.example.ailatrieuphu.databases.dao.QuestionDAO;
 import com.example.ailatrieuphu.databases.entities.HighScore;
 import com.example.ailatrieuphu.databinding.FrgM004HighscoreBinding;
+import com.example.ailatrieuphu.dialog.SettingDialog;
 import com.example.ailatrieuphu.viewmodel.M004ViewModel;
 
 import java.util.List;
@@ -29,16 +31,18 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
     protected void initViews() {
         updateRecycleView();
         showListHighScore();
-        App.getInstance().getStorage().highScore.observe(this, highScores -> {
+        mViewModel.highScore.observe(this, highScores -> {
             HighScoreAdapter adapter = (HighScoreAdapter) mBinding.rvListHighScore.getAdapter();
             assert adapter != null;
             adapter.setData(highScores);
         });
+        CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_MUSIC);
+        CommonUtils.getInstance().getPref(SettingDialog.STATE_OF_SOUND);
     }
 
     private void updateRecycleView() {
-        if (App.getInstance().getStorage().highScore.getValue() != null) {
-            HighScoreAdapter adapter = new HighScoreAdapter(mContext, App.getInstance().getStorage().highScore.getValue());
+        if (mViewModel.highScore.getValue() != null) {
+            HighScoreAdapter adapter = new HighScoreAdapter(mContext, mViewModel.highScore.getValue());
             mBinding.rvListHighScore.setAdapter(adapter);
             attachSwipeToRV(adapter);
         }
@@ -54,7 +58,7 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                HighScore delItem = Objects.requireNonNull(App.getInstance().getStorage().highScore.getValue()).get(position);
+                HighScore delItem = Objects.requireNonNull(mViewModel.highScore.getValue()).get(position);
 
                 AlertDialog dialog = new AlertDialog.Builder(mContext).create();
                 dialog.setTitle("Thông báo");
@@ -67,7 +71,7 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
                         QuestionDAO dao = App.getInstance().getDb().getDAO();
                         dao.delete(delItem);
                     });
-                    App.getInstance().getStorage().highScore.getValue().remove(position);
+                    Objects.requireNonNull(mViewModel.highScore.getValue()).remove(position);
                     adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 });
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "No", (dialogInterface, i) -> adapter.notifyItemChanged(position));
@@ -80,7 +84,7 @@ public class M004HighScoreFrg extends BaseFragment<FrgM004HighscoreBinding, M004
         HandlerManager.getINSTANCE().postNewRunnable(() -> {
             List<HighScore> listData = App.getInstance().getDb().getDAO().getAll();
             MainActivity act = (MainActivity) mContext;
-            act.runOnUiThread(() -> App.getInstance().getStorage().highScore.setValue(listData));
+            act.runOnUiThread(() -> mViewModel.highScore.setValue(listData));
         });
     }
 

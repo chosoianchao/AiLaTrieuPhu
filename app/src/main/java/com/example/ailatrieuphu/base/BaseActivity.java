@@ -52,9 +52,6 @@ public abstract class BaseActivity<B extends ViewBinding, V extends BaseViewMode
         showFrg(R.id.ln_main, tag, null, false);
     }
 
-    public void showFrg(String tag, Object data, Boolean isChecked) {
-        showFrg(R.id.ln_main, tag, data, isChecked);
-    }
 
     public void showFrg(String tag, Boolean isBacked) {
         showFrg(R.id.ln_main, tag, null, isBacked);
